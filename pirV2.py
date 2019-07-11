@@ -31,23 +31,19 @@ def main():
 
     last_motion_time = time.time()
 
-    try:
-        while True:
-            if GPIO.input(PIR_PIN):
-                last_motion_time = time.time()
-                sys.stdout.flush()
-                if turned_off:
-                    turned_off = False
-                    colors = turn_on()
-            else:
-                if not turned_off and time.time() > (last_motion_time + SHUTOFF_DELAY):
-                    turned_off = True
-                    colors = turn_off()
-            time.sleep(.1)
-            colorWipe(strip, colors, wait_ms=100)  # Display color
-    except KeyboardInterrupt:
-        GPIO.cleanup()
-    colorWipe(strip, Color(0, 0, 0), 10)
+    while True:
+        if GPIO.input(PIR_PIN):
+            last_motion_time = time.time()
+            sys.stdout.flush()
+            if turned_off:
+                turned_off = False
+                colors = turn_on()
+        else:
+            if not turned_off and time.time() > (last_motion_time + SHUTOFF_DELAY):
+                turned_off = True
+                colors = turn_off()
+        time.sleep(.1)
+        colorWipe(strip, colors, wait_ms=100)  # Display color
 
 
 def turn_on():                # chto delat kogda dvizhenie obnaruzheno
@@ -68,4 +64,8 @@ def colorWipe(strip, color, wait_ms=50):  # отображение цвета п
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+    colorWipe(strip, Color(0, 0, 0), 10)
