@@ -6,7 +6,6 @@ import time
 import RPi.GPIO as GPIO
 from rpi_ws281x import Color, Adafruit_NeoPixel
 import subprocess
-import argparse
 
 GPIO.setmode(GPIO.BCM)
 SHUTOFF_DELAY = 20     # vremya zaderzhki v secundah ot viklyucheniya
@@ -41,10 +40,6 @@ if __name__ == '__main__':
     GPIO.setup(PIR_PIN, GPIO.IN)
     turned_off = False
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--clear', action='store_true', help='clear the display on exit')
-    args = parser.parse_args()
-
     strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT)
     strip.begin()
     colors = Color(0, 0, 0)
@@ -69,5 +64,5 @@ if __name__ == '__main__':
             colorWipe(strip, colors, wait_ms=100)  # Display color
     except KeyboardInterrupt:
         GPIO.cleanup()
-        if args.clear:
-            colorWipe(strip, Color(0, 0, 0), 10)
+        colorWipe(strip, Color(0, 0, 0), 10)
+    colorWipe(strip, Color(0, 0, 0), 10)
