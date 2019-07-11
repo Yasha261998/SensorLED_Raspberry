@@ -6,12 +6,11 @@ import time
 import RPi.GPIO as GPIO
 from neopixel import *
 import subprocess
-import argparse
 
 GPIO.setmode(GPIO.BCM)
 SHUTOFF_DELAY = 120     # vremya zaderzhki v secundah ot viklyucheniya
-PIR_PIN = 24            # Pin k kotoromu pisoedinen sensor
-LED_COUNT = 10          # Количество светодиодов в ленте
+PIR_PIN = 11            # Pin k kotoromu pisoedinen sensor
+LED_COUNT = 24          # Количество светодиодов в ленте
 LED_PIN = 21            # GPIO пин, к которому вы подсоединяете светодиодную ленту
 LED_FREQ_HZ = 800000    # LED частота обновления (обычно 800khz)
 LED_DMA = 10            # DMA канал
@@ -23,17 +22,12 @@ LED_CHANNEL = 0         # Set to '1' for GPIOs 13, 19, 41, 45 or 53
 def main():
     GPIO.setup(PIR_PIN, GPIO.IN)
     turned_off = False
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--clear', action='store_true', help='clear the display on exit')
-    args = parser.parse_args()
 
     strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT)
     strip.begin()
     colors = Color(0, 0, 0)
 
-    print('Press Ctrl-C to quit.')
-    if not args.clear:
-        print('Use "-c" argument to clear LEDs on exit')
+    print('Run')
 
     last_motion_time = time.time()
 
@@ -53,8 +47,7 @@ def main():
             colorWipe(strip, colors, wait_ms=100)  # Display color
     except KeyboardInterrupt:
         GPIO.cleanup()
-        if args.clear:
-            colorWipe(strip, Color(0, 0, 0), 10)
+    colorWipe(strip, Color(0, 0, 0), 10)
 
 
 def turn_on():                # chto delat kogda dvizhenie obnaruzheno
