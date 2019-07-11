@@ -66,3 +66,4 @@ if __name__ == '__main__':
         GPIO.cleanup()
     finally:
         colorWipe(strip, Color(0, 0, 0), 10)
+    colorWipe(strip, Color(0, 0, 0), 10)
