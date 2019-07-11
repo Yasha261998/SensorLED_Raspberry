@@ -4,7 +4,7 @@
 import sys
 import time
 import RPi.GPIO as GPIO
-from rpi_ws281x import Color, Adafruit_NeoPixel
+from neopixel import *
 import subprocess
 
 GPIO.setmode(GPIO.BCM)
