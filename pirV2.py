@@ -30,10 +30,10 @@ def turn_off():               # chto delat kogda dvizheniya net
 
 
 def colorWipe(strip, color, wait_ms=50):  # отображение цвета по одному светодиоду за раз
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i, color)
-            strip.show()
-            time.sleep(wait_ms / 1000.0)
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, color)
+        strip.show()
+        time.sleep(wait_ms / 1000.0)
 
 
 if __name__ == '__main__':
@@ -48,6 +48,7 @@ if __name__ == '__main__':
 
     last_motion_time = time.time()
 
+    print('1')
     try:
         while True:
             if GPIO.input(PIR_PIN):
