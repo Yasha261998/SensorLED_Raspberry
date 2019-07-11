@@ -64,5 +64,5 @@ if __name__ == '__main__':
             colorWipe(strip, colors, wait_ms=100)  # Display color
     except KeyboardInterrupt:
         GPIO.cleanup()
+    finally:
         colorWipe(strip, Color(0, 0, 0), 10)
-    colorWipe(strip, Color(0, 0, 0), 10)
