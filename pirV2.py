@@ -4,11 +4,11 @@
 import sys
 import time
 import RPi.GPIO as GPIO
-from neopixel import *
+from rpi_ws281x import Color, Adafruit_NeoPixel
 import subprocess
 
 GPIO.setmode(GPIO.BCM)
-SHUTOFF_DELAY = 120     # vremya zaderzhki v secundah ot viklyucheniya
+SHUTOFF_DELAY = 20     # vremya zaderzhki v secundah ot viklyucheniya
 PIR_PIN = 11            # Pin k kotoromu pisoedinen sensor
 LED_COUNT = 24          # Количество светодиодов в ленте
 LED_PIN = 21            # GPIO пин, к которому вы подсоединяете светодиодную ленту
@@ -48,7 +48,6 @@ if __name__ == '__main__':
 
     last_motion_time = time.time()
 
-    print('1')
     try:
         while True:
             if GPIO.input(PIR_PIN):
