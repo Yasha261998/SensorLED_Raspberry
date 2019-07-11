@@ -6,25 +6,34 @@ import time
 import RPi.GPIO as GPIO
 from neopixel import *
 import subprocess
+import argparse
 
 GPIO.setmode(GPIO.BCM)
-SHUTOFF_DELAY = 5   # vremya zaderzhki v secundah ot viklyucheniya
-PIR_PIN = 11        # Pin k kotoromu pisoedinen sensor
-LED_COUNT = 10      # Количество светодиодов в ленте
-LED_PIN = 18        # GPIO пин, к которому вы подсоединяете светодиодную ленту
-LED_FREQ_HZ = 800000  # LED частота обновления (обычно 800khz)
-LED_DMA = 10         # DMA канал
-LED_BRIGHTNESS = 255  # Установить 0 для самого тёмного 255
-LED_INVERT = False   # True для иняертирования сигнала
-LED_CHANNEL = 0       # Set to '1' for GPIOs 13, 19, 41, 45 or 53
+SHUTOFF_DELAY = 120     # vremya zaderzhki v secundah ot viklyucheniya
+PIR_PIN = 24            # Pin k kotoromu pisoedinen sensor
+LED_COUNT = 10          # Количество светодиодов в ленте
+LED_PIN = 21            # GPIO пин, к которому вы подсоединяете светодиодную ленту
+LED_FREQ_HZ = 800000    # LED частота обновления (обычно 800khz)
+LED_DMA = 10            # DMA канал
+LED_BRIGHTNESS = 255    # Установить 0 для самого тёмного 255
+LED_INVERT = False      # True для иняертирования сигнала
+LED_CHANNEL = 0         # Set to '1' for GPIOs 13, 19, 41, 45 or 53
 
 
 def main():
     GPIO.setup(PIR_PIN, GPIO.IN)
     turned_off = False
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--clear', action='store_true', help='clear the display on exit')
+    args = parser.parse_args()
+
     strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT)
     strip.begin()
-    colors = 0
+    colors = Color(0, 0, 0)
+
+    print('Press Ctrl-C to quit.')
+    if not args.clear:
+        print('Use "-c" argument to clear LEDs on exit')
 
     last_motion_time = time.time()
 
@@ -40,17 +49,17 @@ def main():
                 turned_off = True
                 colors = turn_off()
         time.sleep(.1)
-        colorWipe(strip, Color(colors, 0, 0), wait_ms=100) # Display color
+        colorWipe(strip, colors, wait_ms=100)  # Display color
 
 
 def turn_on():                # chto delat kogda dvizhenie obnaruzheno
     print "Motion DETECTED"
-    return 255
+    return Color(77, 77, 255)
 
 
 def turn_off():               # chto delat kogda dvizheniya net
     print "NO motion"
-    return 0
+    return Color(0, 0, 0)
 
 
 def colorWipe(strip, color, wait_ms=50):  # отображение цвета по одному светодиоду за раз
@@ -65,3 +74,5 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         GPIO.cleanup()
+        if args.clear:
+            colorWipe(strip, Color(0, 0, 0), 10)
